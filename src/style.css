@@ -40,10 +40,9 @@
     .container {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
-        row-gap: 10px;
-        margin-left: 100px;
-        margin-right: 100px;
+        justify-content: center;
+        row-gap: 20px;
+        column-gap: 20px;
     }
 
     .card {
