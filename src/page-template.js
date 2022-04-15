@@ -1,3 +1,4 @@
+//create cards for manager, and all engineers and interns
 templateHTML = (data) => {
 
     pageArr = []; 
@@ -32,7 +33,7 @@ templateHTML = (data) => {
     return generateTeam;
 }
 
-//create MANAGER cards
+//create MANAGER card
 const generateManager = manager => {
     return `
         <div class="card">

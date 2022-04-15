@@ -36,13 +36,6 @@ const promptManager = () => {
             name: 'officeNumber',
             message: "Enter team manager's office phone number.",
         },
-        {
-            type: 'list',
-            name: 'confirmAddTeam',
-            message: "Please select if you want to build either an 'Engineer' or an 'Intern' contact, or if you have completed adding your team.",
-            choices: ['Engineer', 'Intern', "I'm done adding team members."],
-            default: 2
-        },
     ])
 
     //add manager profile to team member array
@@ -53,14 +46,7 @@ const promptManager = () => {
         teamArr.push(manager);
         //console.log(manager);
 
-        if (managerCard.confirmAddTeam === 'Engineer') {
-            return promptEngineer(teamArr)
-        }
-         else if (managerCard.confirmAddTeam === 'Intern') {
-            return promptIntern(teamArr)
-        } else {
-            return teamArr;
-        }
+        return teamArr;
 
     });
 };
@@ -72,21 +58,14 @@ const promptEngineer = () => {
     return inquirer.prompt ([
         {
             type: 'confirm',
-            name: 'confirmAddEmployee',
-            message: "Would you like to add additional team members to your contact page?.",
-            default: false
-        },
-        {
-            type: 'confirm',
             name: 'confirmAddEngineer',
-            message: "Would you like to add an ENGINEER?",
-            when: (response) => response.confirmAddEmployee === true,
+            message: "Would you like to add additional ENGINEERS to your contact page?",
             default: false
         },
         {
             type: 'input',
             name: 'name',
-            message: "Enter engineer's first and last name.",
+            message: "Enter Engineer's first and last name.",
             when: (response) => response.confirmAddEngineer === true,
             validate: engineerName => {
                 if (engineerName) {
@@ -99,7 +78,7 @@ const promptEngineer = () => {
         {
             type: 'input',
             name: 'idNumber',
-            message: "Enter engineer's ID number.",
+            message: "Enter Engineer's ID number.",
             when: ({ name }) => {
                 if (name) {
                     return true;
@@ -107,8 +86,8 @@ const promptEngineer = () => {
                     return false;
                 }
             },
-            validate: employeeIdNumber => {
-                if (employeeIdNumber) {
+            validate: engineerIdNumber => {
+                if (engineerIdNumber) {
                     return true;
                 } else {
                     return false;
@@ -118,7 +97,7 @@ const promptEngineer = () => {
         {
             type: 'input',
             name: 'email',
-            message: "Enter team member's email address.",
+            message: "Enter Engineer's email address.",
             when: ({ idNumber }) => {
                 if (idNumber) {
                     return true;
@@ -138,7 +117,7 @@ const promptEngineer = () => {
         {
             type: 'input',
             name: 'github',
-            message: "Enter team member GitHub profile (username only).",
+            message: "Enter Engineer's GitHub profile (username only).",
             when: ({ email }) => {
                 if (email) {
                     return true;
@@ -161,11 +140,9 @@ const promptEngineer = () => {
         const { name, idNumber, email, github } = engineerCard;
         const engineer = new Engineer(name, idNumber, email, github)
 
-        teamArr.push(engineer);
-        //console.log(engineer);
-
         if (engineerCard.github) {
-            return promptEngineer(teamArr)
+            teamArr.push(engineer);
+                return promptEngineer(teamArr)
         } else {
             return teamArr;
         }
@@ -173,14 +150,14 @@ const promptEngineer = () => {
 
 };
 
-//prompt for Engineer questions
+//prompt for INTERN questions
 const promptIntern = () => {
 
     return inquirer.prompt ([
         {
             type: 'confirm',
-            name: 'confirmAddEmployee',
-            message: "Would you like to add INTERNS to your contact page?",
+            name: 'confirmAddIntern',
+            message: "Would you like to add additional INTERNS to your contact page?",
             default: false
         },
         {
@@ -254,27 +231,15 @@ const promptIntern = () => {
                 }
             }
         },
-        {
-            type: 'confirm',
-            name: 'confirmAddIntern',
-            message: "Would you like to add another INTERN?",
-            default: false
-        },
-
     ])
 
     .then(internCard => {
         const { name, idNumber, email, school } = internCard;
         const intern = new Intern(name, idNumber, email, school)
 
-        teamArr.push(intern);
-        //console.log(intern)
-
-        if (internCard.confirmAddTeam === 'Engineer') {
-            return promptEngineer(teamArr)
-        }
-         else if (internCard.confirmAddTeam === 'Intern') {
-            return promptIntern(teamArr)
+        if (internCard.school) {
+            teamArr.push(intern);
+                return promptIntern(teamArr);
         } else {
             return teamArr;
         }
@@ -295,5 +260,11 @@ promptManager()
             return;
         }
         console.log('Page creation successful!')
+        fs.copyFile('./src/style.css', './dist/style.css', err => {
+            if (err) {
+              console.log(err);
+              return;
+            };
+          });
     });
 })
