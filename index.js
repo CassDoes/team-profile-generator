@@ -1,60 +1,98 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-const templateHTML = require('./src/page-template.js');
+const employeeCards = require('./src/page-template.js');
 
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 
 //team member array
-const teamArr = [];
-
+const teamDataArr = [];
 
 //Initial prompts begin with Manager questions here
 const promptManager = () => {
-
     return inquirer.prompt ([
-        
+        {
+            type: 'input',
+            name: 'company',
+            message: "Please enter the name of your company.",
+            validate: companyName => {
+                if (companyName) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            
+        },
         {
             type: 'input',
             name: 'name',
-            message: "Please enter the team manager's first and last name.",
+            message: "Please enter the Team Manager's first and last name.",
+            validate: managerName => {
+                if (managerName) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         },
         {
             type: 'input',
             name: 'idNumber',
-            message: "Enter team manager's ID number."
+            message: "Enter Team Manager's ID number.",
+            validate: valid => {
+                if (!isNaN(valid)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         },
         {
             type: 'input',
             name: 'email',
-            message: "Enter team manager's email.",
+            message: "Enter Team Manager's email (must be valid).",
+            validate: email => {
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+                if (valid) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         },
         {
             type: 'input',
             name: 'officeNumber',
-            message: "Enter team manager's office phone number.",
+            message: "Enter Team Manager's office phone number in the following format (555-555-5555).",
+            validate: officeNumber => {
+                valid = /^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/.test(officeNumber)
+                if (valid) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         },
     ])
 
     //add manager profile to team member array
     .then(managerCard => {
-        const { name, idNumber, email, officeNumber } = managerCard;
-        const manager = new Manager (name, idNumber, email, officeNumber);
+        const { name, idNumber, email, officeNumber, company } = managerCard;
+        const manager = new Manager (name, idNumber, email, officeNumber, company);
         
-        teamArr.push(manager);
-        //console.log(manager);
+        teamDataArr.push(manager);
+        console.log(manager);
 
-        return teamArr;
-
+        return teamDataArr;
     });
 };
 
 
 //prompt for Engineer questions
 const promptEngineer = () => {
-
     return inquirer.prompt ([
         {
             type: 'confirm',
@@ -86,8 +124,8 @@ const promptEngineer = () => {
                     return false;
                 }
             },
-            validate: engineerIdNumber => {
-                if (engineerIdNumber) {
+            validate: valid => {
+                if (!isNaN(valid)) {
                     return true;
                 } else {
                     return false;
@@ -133,7 +171,6 @@ const promptEngineer = () => {
                 }
             }
         },
-
     ])
 
     .then(engineerCard => {
@@ -141,18 +178,16 @@ const promptEngineer = () => {
         const engineer = new Engineer(name, idNumber, email, github)
 
         if (engineerCard.github) {
-            teamArr.push(engineer);
-                return promptEngineer(teamArr)
+            teamDataArr.push(engineer);
+                return promptEngineer(teamDataArr)
         } else {
-            return teamArr;
+            return teamDataArr;
         }
     });
-
 };
 
 //prompt for INTERN questions
 const promptIntern = () => {
-
     return inquirer.prompt ([
         {
             type: 'confirm',
@@ -184,8 +219,8 @@ const promptIntern = () => {
                     return false;
                 }
             },
-            validate: internIdNumber => {
-                if (internIdNumber) {
+            validate: valid => {
+                if (!isNaN(valid)) {
                     return true;
                 } else {
                     return false;
@@ -238,10 +273,10 @@ const promptIntern = () => {
         const intern = new Intern(name, idNumber, email, school)
 
         if (internCard.school) {
-            teamArr.push(intern);
-                return promptIntern(teamArr);
+            teamDataArr.push(intern);
+                return promptIntern(teamDataArr);
         } else {
-            return teamArr;
+            return teamDataArr;
         }
     });
 };
@@ -250,9 +285,9 @@ const promptIntern = () => {
 promptManager()
     .then(promptEngineer)
     .then(promptIntern)
-    .then(teamArr => {
+    .then(teamDataArr => {
 
-    const data = templateHTML(teamArr);
+    const data = employeeCards(teamDataArr);
         
     fs.writeFile('./dist/index.html', data, err => {
         if (err) {

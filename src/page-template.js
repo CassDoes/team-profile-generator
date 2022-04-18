@@ -1,7 +1,17 @@
-//create cards for manager, and all engineers and interns
-templateHTML = (data) => {
+//get date, time, and year for footer
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const d = new Date();
 
-    pageArr = []; 
+let weekday = weekdays[d.getDay()];
+let month = months[d.getMonth()];
+
+
+
+//create team member array attached to appropriate HTML based on getRole()
+employeeCards = (data) => {
+
+    cardArr = []; 
 
     for (let i = 0; i < data.length; i++) {
         const teamMember = data[i];
@@ -10,39 +20,44 @@ templateHTML = (data) => {
         if (role === 'Manager') {
             const managerCard = generateManager(teamMember);
 
-            pageArr.push(managerCard);
+            cardArr.push(managerCard);
         }
 
         if (role === 'Engineer') {
             const engineerCard = generateEngineer(teamMember);
 
-            pageArr.push(engineerCard);
+            cardArr.push(engineerCard);
         }
 
         if (role === 'Intern') {
             const internCard = generateIntern(teamMember);
 
-            pageArr.push(internCard);
+            cardArr.push(internCard);
         }
         
     }
 
-    const teamCards = pageArr.join('')
+    const teamCards = cardArr.join('')
 
-    const generateTeam = generateHTML(teamCards); 
-    return generateTeam;
+    const generateTeamCards = generateHTML(teamCards); 
+    return generateTeamCards;
 }
 
-//create MANAGER card
+//HTML for MANAGER card
 const generateManager = manager => {
     return `
+    <header class="jumbotron">
+        <h1 class="business">${manager.company}<br><span class="header-text">TEAM MEMBERS</span></h1>
+    </header>
+
+    <section class="container">
         <div class="card">
             <h2 class="title" id="manager">MANAGER</h2>
             <h3 class="name">${manager.name}</h3>
             <p class="badge">ID: ${manager.idNumber}</p>
             <div>
                 <ul class="contact">
-                    <li class="phone">${manager.number}</li>
+                    <li class="phone">Phone: <span>${manager.officeNumber}</span></li>
                     <li class="email">${manager.email}</li>
                 </ul>
             </div>
@@ -51,14 +66,14 @@ const generateManager = manager => {
                     <p class="fa-solid fa-phone-flip"></p>
                 </div>
                 <div class="email-icon">
-                    <p class="fa-solid fa-envelope"></p>
+                <a href = "mailto: ${manager.email}" class="fa-solid fa-envelope"></a>
                 </div>
             </div>
         </div>
     `;
 };
 
-//create ENGINEER cards
+//HTML for ENGINEER cards
 const generateEngineer = engineer => {
     return `
         <div class="card">
@@ -67,23 +82,23 @@ const generateEngineer = engineer => {
             <p class="badge">ID: ${engineer.idNumber}</p>
             <div>
                 <ul class="contact">
-                    <li class="github">${engineer.github}</li>
+                    <li class="github">GitHub: <span>${engineer.github}</span></li>
                     <li class="email">${engineer.email}</li>
                 </ul>
             </div>
             <div class="wrapper">
                 <div class="github-icon">
-                    <i class="fa-brands fa-github"></i>
+                    <a href="https://www.github.com/${engineer.github}" class="fa-brands fa-github"></a>
                 </div>
                 <div class="email-icon">
-                    <p class="fa-solid fa-envelope"></p>
+                    <a href = "mailto: ${engineer.email}" class="fa-solid fa-envelope"></a>
                 </div>
             </div>
         </div>
     `;
 };
 
-//create INTERN cards
+//HTML for INTERN cards
 const generateIntern = intern => {
     return `
         <div class="card">
@@ -92,7 +107,7 @@ const generateIntern = intern => {
             <p class="badge">ID: ${intern.idNumber}</p>
             <div>
                 <ul class="contact">
-                    <li class="school">${intern.school}</li>
+                    <li class="github">School: <span>${intern.school}</span></li>
                     <li class="email">${intern.email}</li>
                 </ul>
             </div>
@@ -101,15 +116,14 @@ const generateIntern = intern => {
                     <p class="fa-solid fa-graduation-cap"></p>
                 </div>
                 <div class="email-icon">
-                    <p class="fa-solid fa-envelope"></p>
+                <a href = "mailto: ${intern.email}" class="fa-solid fa-envelope"></a>
                 </div>
             </div>
         </div>
     `;
 };
 
-
-
+//HTML for remaining page combined with all team member cards
 const generateHTML = function (teamCards) {
     return `
     <!DOCTYPE html>
@@ -124,25 +138,20 @@ const generateHTML = function (teamCards) {
         <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="./style.css"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Employee Contacts</title>
+        <title>Business Contact Page</title>
     </head>
-
     <body>
-    
-        <header class="jumbotron">
-            <h1 class="business">HEADER NAME<br><span class="header-text">TEAM MEMBERS</span></h1>
-        </header>
 
-        <section class="container">
+        <!-- BUSINESS NAME, HEADER, and TEAM MEMBER cards -->
             ${teamCards}
         </section>
 
-        <footer>${new Date().getFullYear()}</footer>
+        <!-- FOOTER WITH CURRENT DATE -->
+        <footer>${weekday + ' ' + month + ' ' + d.getDate() + ', ' + d.getFullYear()}</footer>
 
     </body>
-
     </html>
     `;
 };
 
-module.exports = templateHTML;
+module.exports = employeeCards;
