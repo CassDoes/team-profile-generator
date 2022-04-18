@@ -84,7 +84,7 @@ const promptManager = () => {
         const manager = new Manager (name, idNumber, email, officeNumber, company);
         
         teamDataArr.push(manager);
-        console.log(manager);
+        //console.log(manager);
 
         return teamDataArr;
     });
@@ -179,7 +179,8 @@ const promptEngineer = () => {
 
         if (engineerCard.github) {
             teamDataArr.push(engineer);
-                return promptEngineer(teamDataArr)
+            //console.log(engineer);
+            return promptEngineer(teamDataArr)
         } else {
             return teamDataArr;
         }
@@ -274,7 +275,8 @@ const promptIntern = () => {
 
         if (internCard.school) {
             teamDataArr.push(intern);
-                return promptIntern(teamDataArr);
+            //console.log(intern);
+            return promptIntern(teamDataArr);
         } else {
             return teamDataArr;
         }

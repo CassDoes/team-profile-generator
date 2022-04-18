@@ -6,8 +6,6 @@ const d = new Date();
 let weekday = weekdays[d.getDay()];
 let month = months[d.getMonth()];
 
-
-
 //create team member array attached to appropriate HTML based on getRole()
 employeeCards = (data) => {
 

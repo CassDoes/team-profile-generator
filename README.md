@@ -28,7 +28,7 @@
   | **Cassandra Hardin** |
 
   ## Tutorial
-  [Click Here](https://www.youtube.com/watch?v=FP_-FNbvuDI) to watch the full tutorial on YouTube  
+  [Click Here](https://www.youtube.com/watch?v=CoYpaXWwK5g) to watch the full tutorial on YouTube  
   
   ![image](https://user-images.githubusercontent.com/96797348/163887013-622caf98-ee5a-4441-adb5-55a56ce712e5.png)
 
